@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS inquiry_updates (
 -- Password: Admin@1234  (change immediately after setup!)
 -- Generated with: password_hash('Admin@1234', PASSWORD_BCRYPT)
 INSERT INTO admins (username, password_hash) VALUES
-  ('admin', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+  ('admin', '$2y$10$d3IC.JYDyjs72HqW3rpHPeweg7QoYetvHDgL7qWjDhKcaf.CeTI52')
 ON DUPLICATE KEY UPDATE id=id;
 
 -- ═══════════════════════════════════════════════════════════
