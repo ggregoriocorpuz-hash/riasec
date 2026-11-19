@@ -1,0 +1,11 @@
+{
+    "name": "ggregoriocorpuz-hash/riasec",
+    "description": "RIASEC Career Assessment System",
+    "type": "project",
+    "require": {
+        "php": ">=8.2",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "ext-pdo_mysql": "*"
+    }
+}
