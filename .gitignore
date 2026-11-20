@@ -1,1 +1,3 @@
 config/ai.php
+tmp_*
+!tmp_diag.php
