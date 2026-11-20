@@ -1,9 +1,0 @@
-# Exclude non-production files from the Railway build (Railpack).
-# Note: do NOT exclude vendor/ — it contains the self-hosted Bootstrap assets.
-.git
-.github
-.vscode
-.env
-.env.*
-*.log
-tmp_*

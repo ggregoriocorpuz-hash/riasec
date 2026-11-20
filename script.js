@@ -2266,4 +2266,18 @@ function escapeHtml(str) {
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
   showScreen('screen-welcome');
+
+  // Admin button: file:// and VS Code Live Server cannot execute PHP,
+  // so the browser downloads admin/index.php instead of rendering it.
+  // Send the user to XAMPP, which runs PHP correctly.
+  const adminBtn = document.getElementById('btn-admin');
+  if (adminBtn) {
+    adminBtn.addEventListener('click', (e) => {
+      const onFile = window.location.protocol === 'file:';
+      if (onFile || isLiveServer) {
+        e.preventDefault();
+        window.location.href = 'http://localhost/riasec/admin/index.php';
+      }
+    });
+  }
 });
