@@ -389,11 +389,8 @@ if ($action === 'search' && $method === 'GET') {
     }
     unset($school);
 
-    /* ── 7. Sort: recommended-program matches first, then nearest ── */
+    /* ── 7. Sort: nearest first ── */
     usort($allSchools, function ($a, $b) {
-        if ($a['program_match'] !== $b['program_match']) {
-            return $b['program_match'] <=> $a['program_match'];
-        }
         return ($a['distance'] ?? PHP_INT_MAX) <=> ($b['distance'] ?? PHP_INT_MAX);
     });
     $allSchools = array_slice($allSchools, 0, 30);

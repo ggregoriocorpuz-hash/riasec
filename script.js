@@ -1826,17 +1826,35 @@ async function resolvePlace(query) {
 
 /* ─── School directory (colleges & universities, verified by the backend) ── */
 // Courses recommended for the student's actual RIASEC code — every
-// category of the result contributes its courses (deduplicated), so a
-// tied result such as "RI" recommends the R and I courses together.
+// Returns courses for the student's highest-scoring RIASEC category (or
+// all categories tied for the highest score). Uses state.lastScores when
+// available; falls back to the displayed Holland code letter.
 function selectedRiasecCourses() {
-  const seen = new Set();
+  const seen    = new Set();
   const courses = [];
+
+  const scores = state.lastScores;
+  if (scores && typeof scores === 'object') {
+    const values   = Object.values(scores).map(Number);
+    const topScore = Math.max(...values);
+
+    // Only include categories tied exactly at the top score.
+    const letters = Object.keys(scores)
+      .filter(l => Object.prototype.hasOwnProperty.call(RIASEC_COURSE_MAP, l)
+                && Number(scores[l]) === topScore);
+
+    for (const letter of letters) {
+      for (const course of RIASEC_COURSE_MAP[letter].courses) {
+        if (!seen.has(course)) { seen.add(course); courses.push(course); }
+      }
+    }
+    if (courses.length) return courses;
+  }
+
+  // Fallback: use the dominant letter shown in the results screen.
   for (const letter of getDominantLettersForResult()) {
     for (const course of RIASEC_COURSE_MAP[letter].courses) {
-      if (!seen.has(course)) {
-        seen.add(course);
-        courses.push(course);
-      }
+      if (!seen.has(course)) { seen.add(course); courses.push(course); }
     }
   }
   return courses;
