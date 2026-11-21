@@ -1375,7 +1375,7 @@ const API_SCHOOLS   = ASSESSMENT_API_BASE + '/schools.php';
 const SCHOOL_SEARCH_RADII = [100000]; // metres: search within 100 km of the student's location
 const SCHOOL_EXPAND_RADIUS = 100000;  // metres: widest radius offered by the wider-area button
 const SCHOOL_DISPLAY_LIMIT = 25;    // max institutions shown in the list
-const SCHOOL_BACKEND_TIMEOUT = 75000;   // ms — backend location search
+const SCHOOL_BACKEND_TIMEOUT = 90000;   // ms — backend location search
 const NOMINATIM_TIMEOUT = 15000;        // ms — city lookup fallback
 const SCHOOL_RESOLVE_TIMEOUT = 30000;   // ms — place lookup incl. a province's city list
 

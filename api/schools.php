@@ -767,14 +767,16 @@ function searchOverpass(float $lat, float $lon, int $radiusMeters): ?array {
 
     $r = max(1000, min($radiusMeters, 100000));  // clamp 1km–100km
 
-    $query = "[out:json][timeout:10];(";
-    // Universities and colleges
+    $query = "[out:json][timeout:25];(";
+    // Universities and colleges — nodes, ways, and relations (large campuses like CLSU)
     $query .= "node[\"amenity\"~\"university|college\"](around:{$r},{$lat},{$lon});";
     $query .= "way[\"amenity\"~\"university|college\"](around:{$r},{$lat},{$lon});";
+    $query .= "relation[\"amenity\"~\"university|college\"](around:{$r},{$lat},{$lon});";
     // Schools whose name contains "college" or "university" (many PH colleges are tagged amenity=school)
     $query .= "node[\"amenity\"=\"school\"][\"name\"~\"[Cc]ollege|[Uu]niversity\",i](around:{$r},{$lat},{$lon});";
     $query .= "way[\"amenity\"=\"school\"][\"name\"~\"[Cc]ollege|[Uu]niversity\",i](around:{$r},{$lat},{$lon});";
-    $query .= ");out center 100;";
+    $query .= "relation[\"amenity\"=\"school\"][\"name\"~\"[Cc]ollege|[Uu]niversity\",i](around:{$r},{$lat},{$lon});";
+    $query .= ");out center 200;";
 
     $mirrors = [
         'https://overpass-api.de/api/interpreter',
@@ -782,9 +784,8 @@ function searchOverpass(float $lat, float $lon, int $radiusMeters): ?array {
         'https://overpass.kumi.systems/api/interpreter',
     ];
 
-    // Mirrors answer in well under a second when healthy; a short budget
-    // keeps a dead mirror from delaying the Nominatim fallback below.
-    $deadline = microtime(true) + 10.0;
+    // Give mirrors 25 s — matches the [timeout:25] in the QL query.
+    $deadline = microtime(true) + 25.0;
     $data = overpassRequestAll($mirrors, $query, $deadline);
 
     if ($data === null) return null;
@@ -832,8 +833,8 @@ function overpassRequestAll(array $endpoints, string $query, float $deadline): ?
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $query,
-            CURLOPT_TIMEOUT        => 8,
-            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_TIMEOUT        => 25,
+            CURLOPT_CONNECTTIMEOUT => 6,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_HTTPHEADER     => [
                 'Content-Type: text/plain',
